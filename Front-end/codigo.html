@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achados e Perdidos | IFPI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --verde-ifpi: #006633;
+      --verde-escuro: #004d26;
+      --verde-claro: #e8f5e9;
+      --vermelho: #c62828;
+      --cinza: #f5f5f5;
+      --texto: #212121;
+      --texto-secundario: #616161;
+      --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--texto);
+      background: #fff;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ========== HEADER ========== */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--verde-ifpi);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--verde-ifpi);
+      color: white;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-desktop a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--texto);
+      transition: color 0.2s;
+    }
+
+    .nav-desktop a:hover,
+    .nav-desktop a.active {
+      color: var(--verde-ifpi);
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--verde-ifpi);
+      color: var(--verde-ifpi);
+    }
+
+    .btn-outline:hover {
+      background: var(--verde-claro);
+    }
+
+    .btn-primary {
+      background: var(--verde-ifpi);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--verde-escuro);
+    }
+
+    .btn-red {
+      background: var(--vermelho);
+      color: white;
+    }
+
+    .btn-red:hover {
+      background: #b71c1c;
+    }
+
+    /* Menu mobile */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--verde-ifpi);
+      cursor: pointer;
+    }
+
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+
+    .nav-mobile.open {
+      display: flex;
+    }
+
+    .nav-mobile a {
+      padding: 0.6rem 0;
+      font-weight: 500;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      background: linear-gradient(135deg, var(--verde-ifpi) 0%, #008f4c 100%);
+      color: white;
+      padding: 3.5rem 1.25rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80') center/cover;
+      opacity: 0.25;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 span {
+      display: block;
+      font-size: 0.85em;
+      opacity: 0.95;
+    }
+
+    .hero .subtitle {
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      opacity: 0.95;
+    }
+
+    .hero p {
+      max-width: 520px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 1.75rem;
+    }
+
+    /* Search bar */
+    .search-box {
+      display: flex;
+      max-width: 560px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+    }
+
+    .search-box input {
+      flex: 1;
+      border: none;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.95rem;
+      outline: none;
+      color: var(--texto);
+    }
+
+    .search-box input::placeholder {
+      color: #9e9e9e;
+    }
+
+    .search-box button {
+      padding: 0 1.4rem;
+      background: var(--vermelho);
+      color: white;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .search-box button:hover {
+      background: #b71c1c;
+    }
+
+    /* ========== CARDS ========== */
+    .cards-section {
+      max-width: 1200px;
+      margin: -2.5rem auto 0;
+      padding: 0 1.25rem;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--sombra);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--verde-claro);
+      color: var(--verde-ifpi);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--texto);
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: var(--texto-secundario);
+      flex: 1;
+    }
+
+    .card .btn {
+      align-self: flex-start;
+      margin-top: 0.25rem;
+    }
+
+    /* ========== MAPA ========== */
+    .mapa-section {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1.25rem;
+    }
+
+    .mapa-section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--texto);
+    }
+
+    .mapa-section > p {
+      color: var(--texto-secundario);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .mapa-container {
+      background: var(--cinza);
+      border-radius: var(--radius);
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--texto-secundario);
+      border: 2px dashed #bdbdbd;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mapa-container i {
+      font-size: 2.5rem;
+      color: var(--verde-ifpi);
+      opacity: 0.6;
+    }
+
+    .mapa-container span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--verde-ifpi);
+      color: white;
+      margin-top: 3rem;
+      padding: 1.5rem 1.25rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+    }
+
+    .footer-brand .logo-icon {
+      background: white;
+      color: var(--verde-ifpi);
+      font-size: 0.75rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== RESPONSIVO ========== */
+    @media (max-width: 768px) {
+      .nav-desktop {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 2.5rem 1rem 3.5rem;
+        text-align: center;
+      }
+
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .search-box {
+        max-width: 100%;
+        flex-direction: column;
+      }
+
+      .search-box input {
+        padding: 0.85rem 1rem;
+      }
+
+      .search-box button {
+        padding: 0.85rem;
+        justify-content: center;
+      }
+
+      .cards-section {
+        grid-template-columns: 1fr;
+        margin-top: -2rem;
+      }
+
+      .mapa-container {
+        height: 220px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-container {
+        padding: 0.65rem 1rem;
+      }
+
+      .logo span {
+        font-size: 0.85rem;
+      }
+
+      .hero h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">IF</div>
+        <span>INSTITUTO FEDERAL<br>Piauí</span>
+      </a>
+
+      <nav class="nav-desktop">
+        <a href="#" class="active">Início</a>
+        <a href="#">Buscar</a>
+        <a href="#">Sobre</a>
+        <div class="auth-buttons">
+          <button class="btn btn-outline">Entrar</button>
+          <button class="btn btn-primary">Cadastrar</button>
+        </div>
+      </nav>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Menu mobile -->
+    <nav class="nav-mobile" id="navMobile">
+      <a href="#">Início</a>
+      <a href="#">Buscar</a>
+      <a href="#">Sobre</a>
+      <button class="btn btn-outline" style="width: 100%; justify-content: center;">Entrar</button>
+      <button class="btn btn-primary" style="width: 100%; justify-content: center;">Cadastrar</button>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>
+        Achados e Perdidos
+        <span>IFPI</span>
+      </h1>
+      <p class="subtitle">Conectando pessoas e objetos.</p>
+      <p>
+        Encontrou ou perdeu algo? Registre aqui e ajude a devolver o que é de alguém.
+        Também compartilhe atividades no campus.
+      </p>
+
+      <div class="search-box">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Buscar por nome, descrição, categoria, atividade..."
+          autocomplete="off"
+        >
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="cards-section">
+    <article class="card">
+      <div class="card-icon">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <h3>Objetos</h3>
+      <p>Encontrou ou perdeu algo? Registre o objeto e ajude a devolver o que é de alguém no campus.</p>
+      <button class="btn btn-primary">
+        Ver objetos
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </article>
+
+    <article class="card">
+      <div class="card-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <h3>Atividades</h3>
+      <p>Participe de eventos, jogos, estudos e outras atividades no campus. Conecte-se à comunidade.</p>
+      <button class="btn btn-primary">
+        Ver atividades
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </article>
+  </section>
+
+  <!-- MAPA -->
+  <section class="mapa-section">
+    <h2>Mapa interativo do campus</h2>
+    <p>Veja onde objetos e atividades estão localizados no campus do IFPI.</p>
+    
+    <div class="mapa-container" id="mapa">
+      <i class="fas fa-map-marked-alt"></i>
+      <span>Mapa do campus (em breve)</span>
+      <small style="opacity: 0.7;">Clique para explorar as localizações</small>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo-icon">IF</div>
+        <div>
+          <strong>INSTITUTO FEDERAL</strong><br>
+          <small>Piauí</small>
+        </div>
+      </div>
+      
+      <div>
+        <strong>Achados e Perdidos IFPI</strong>
+        <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.2rem;">
+          Conectando pessoas, objetos e boas companhias
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#">Objetos</a>
+        <a href="#">Atividades</a>
+        <a href="#">Sobre</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Menu mobile
+    const menuToggle = document.getElementById('menuToggle');
+    const navMobile = document.getElementById('navMobile');
+
+    menuToggle.addEventListener('click', () => {
+      navMobile.classList.toggle('open');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+
+    // Fechar menu ao clicar em um link
+    navMobile.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('click', () => {
+        navMobile.classList.remove('open');
+        menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+      });
+    });
+
+    // Busca (simulação)
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    function realizarBusca() {
+      const termo = searchInput.value.trim();
+      if (!termo) {
+        searchInput.focus();
+        return;
+      }
+      // Aqui você pode redirecionar para a página de busca
+      alert(`Buscando por: "${termo}"\n\n(Em breve: redirecionamento para resultados)`);
+    }
+
+    searchBtn.addEventListener('click', realizarBusca);
+
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        realizarBusca();
+      }
+    });
+
+    // Cards - botões (simulação de navegação)
+    document.querySelectorAll('.card .btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const titulo = btn.closest('.card').querySelector('h3').textContent;
+        alert(`Você clicou em "${titulo}".\n\n(Em breve: redirecionamento para a listagem)`);
+      });
+    });
+
+    // Mapa (placeholder interativo)
+    document.getElementById('mapa').addEventListener('click', () => {
+      alert('Mapa interativo em desenvolvimento.\n\nAqui será exibido o mapa do campus do IFPI com os objetos e atividades marcados.');
+    });
+  </script>
+</body>
+</html>
